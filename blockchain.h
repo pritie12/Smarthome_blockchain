@@ -18,12 +18,12 @@ typedef struct Block{
     int proof_work;
      unsigned char id_hash[SHA_DEGEST_LENGHT];
     time_t timeStamp;
-    s_block* nextBlock;
-} s_block;
+    s_bloc* nextBlock;
+} s_bloc;
 
 typedef struct Chain{
-    s_block* head;
-    s_block* current;
+    s_bloc* head;
+    s_bloc* current;
     int num_node;
 } s_chain;
  
@@ -36,13 +36,13 @@ typedef struct transaction{
 } s_transaction;
 
 
-void init_chain(s_chaine* chain);
+void init_chain(s_chain* chain);
 void addTransaction();
-void addBlock(s_block previous);
+void addBlock(s_bloc previous);
 
-short cerifyChain(s_block* chain)
-short block_isValid(s_block);
-unsigned char* id_hash_gen(s_block b);
+short cerifyChain(s_bloc* chain)
+short block_isValid(s_bloc);
+unsigned char* id_hash_gen(s_bloc b);
 int proof_work_gen(unsigned char* id_hash);
 short checkProof(unsigned char* id_hash, int proof);
 
