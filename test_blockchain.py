@@ -28,12 +28,12 @@ class TestUtils(unittest.TestCase):
         for i in range(chain.currentIndex):
             b= chain.blocs[i]
             if i==0:
-                self.assertEquals( b.prevHash,"00000" )
+                self.assertEqual( b.prevHash,"000000" )
                 self.assertNotEqual(b.proofOfWork,0)
             elif i== chain.currentIndex-1:
-                self.assertEquals( b.prevHash,chain.blocs[i-1].idHash )
+                self.assertEquals( b.prevHash,chain.blocs[i-1].id_hash )
             else:
-                self.assertEquals( b.prevHash,chain.blocs[i-1].idHash )
+                self.assertEquals( b.prevHash,chain.blocs[i-1].id_hash )
                 self.assertNotEqual(b.proofOfWork,0)
             self.assertNotEqual(b.time,0)
 
