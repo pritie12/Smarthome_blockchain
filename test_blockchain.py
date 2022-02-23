@@ -4,21 +4,45 @@ from blockchain import *
 import datetime
 
 class TestUtils(unittest.TestCase):
+
+
+
+
     def test_checkBloc(self):
         chain = Chain()
         
-        chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
-        chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,0.8)
-        chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
-        chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,0.9)
-        chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
-        chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,1.0)
-        chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
-        chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,1.0)
-        chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
-        chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,0.9)
-        chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
-        chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,0.8)
+        for i in range(10):
+            chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
+            chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,0.8)
+            chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
+            chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,0.9)
+            chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
+            chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,1.0)
+            chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
+            chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,1.0)
+            chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
+            chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,0.9)
+            chain.add_transaction(1,2,datetime.datetime.now().timestamp(),Type_tr.GET,0)
+            chain.add_transaction(2,1,datetime.datetime.now().timestamp(),Type_tr.SEND,0.8)
+        
+        for i in range(chain.currentIndex):
+            b= chain.blocs[i]
+            if i==0:
+                self.assertEquals( b.prevHash,"00000" )
+                self.assertNotEqual(b.proofOfWork,0)
+            elif i== chain.currentIndex-1:
+                self.assertEquals( b.prevHash,chain.blocs[i-1].idHash )
+            else:
+                self.assertEquals( b.prevHash,chain.blocs[i-1].idHash )
+                self.assertNotEqual(b.proofOfWork,0)
+            self.assertNotEqual(b.time,0)
+
+
+
+            
+            
+
+
 
     def test_req_A0501_1(self):
         c = Chain()
