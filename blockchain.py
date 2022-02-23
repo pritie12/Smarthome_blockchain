@@ -16,6 +16,11 @@ class Type_tr(enum.Enum):
     SEND=2
     SET=3
 
+class Type_node(enum.Enum):
+    lumSensor =4
+    motionSensor =3
+    user=1
+    light=2
 
 class Bloc:
     
@@ -28,7 +33,7 @@ class Bloc:
         self.data =[]
         #self.nextBloc
     
-    def idValid(self):
+    def isValid(self):
         return True
 
     def dataToString(self):
