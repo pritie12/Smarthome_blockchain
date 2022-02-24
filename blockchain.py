@@ -5,12 +5,6 @@ import enum
 
 
 
-class Node:
-    def __init__(self,type,param) :
-        self.id
-        self.type_n = type
-        self.param = param
-        self.val =0.0
 
 class Type_tr(enum.Enum):
     GET=1
