@@ -11,6 +11,18 @@ class Type_tr(enum.Enum):
     SEND=2
     SET=3
 
+def initTypeTR (str):
+        if str=="GET":
+            return Type_tr.GET
+        elif str=="SEND":
+            return Type_tr.SEND
+        elif str == "SET":
+            return Type_tr.SET
+        else:
+            return 
+
+
+
 
 class Bloc:
     
@@ -42,7 +54,7 @@ class Bloc:
 
         return (id_hash,proof)
 
-class Trasaction:
+class Transaction:
     def __init__(self,src, dest, time,type_tr, val):
         self.sender_id=src
         self.dest_id=dest
@@ -68,7 +80,7 @@ class Chain:
             self.closeBlock()
             self.add_transaction(src, dest, time,type_tr, val)
         else:
-            b.data.append(Trasaction(src, dest, time,type_tr, val))
+            b.data.append(Transaction(src, dest, time,type_tr, val))
     
     def add_bloc(self, prev_hash):
         self.blocs.append(Bloc(prev_hash))
