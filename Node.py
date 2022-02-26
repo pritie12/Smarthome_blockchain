@@ -1,7 +1,8 @@
 from blockchain import Chain, Transaction , initTypeTR
 import socket
 
-
+host = '127.0.0.1'
+port = 2004
 
 socketSize = 1024
 class Node:
@@ -12,6 +13,7 @@ class Node:
         self.val =0.0
         self.bloc=Chain()
         self.nodes=[]
+        
     
     def connecServer(self,host, port):
         self.client = socket.socket()
@@ -24,6 +26,7 @@ class Node:
 
     def sendTransaction(self,tr):
         msg ="tr:"+tr.toString()
+        print (msg)
         self.client.send(str.encode(msg))
     
     def sendBlockValidation(self, res):
@@ -41,7 +44,8 @@ class Node:
 
     
     def receiveMsg(self):
-        msg =(self.client.recv(socketSize)).decode()
+        msg =(self.client.recv(socketSize)).decode('utf-8')
+        print(msg)
         msgSplited = msg.split(":")
         typeMsg = msgSplited[0]
         if typeMsg=="tr":
