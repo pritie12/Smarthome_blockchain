@@ -27,7 +27,7 @@ class Bloc:
     def __init__(self, prevHash) :
         print("new bloc create")
         self.prevHash= prevHash
-        self.proofOfWork =0
+        self.proofOfWork =-1
         self.id_hash ="0"
         self.time=datetime.datetime.now().timestamp()
         self.data =[]
@@ -45,11 +45,14 @@ class Bloc:
     def mine(self):
         proof= self.proofOfWork
         blocString =str(self.time)+"-"+ self.dataToString()
+        id_hash="x"
 
-        string = blocString +"-" +str(proof)
-        encoded= string.encode()
-        id_hash = hashlib.sha256(encoded).hexdigest()
-
+        while id_hash[0]!= "0":
+            proof+=1
+            string = blocString +"-" +str(proof)
+            encoded= string.encode()
+            id_hash = hashlib.sha256(encoded).hexdigest()
+        print("id hash :"+id_hash)
         return (id_hash,proof)
 
 class Trasaction:
