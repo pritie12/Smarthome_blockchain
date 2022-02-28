@@ -25,11 +25,11 @@ class Node:
             print(str(e))
 
     def sendTransaction(self,tr):
-        msg ="tr:"+tr.toString()
+        msg ="tr:"+tr.toString()  # transaction
         print (msg)
         self.client.send(str.encode(msg))
     
-    def sendBlockValidation(self, res):
+    def sendBlockValidation(self, res): 
         msg="bv:"+ str(res)
         self.client.send(str.encode(msg))
     
@@ -62,8 +62,6 @@ class Node:
         
 
 
-class UserN(Node):
-    def __init__(self,param):
-        return super().__init__("user",param)
+
     
 

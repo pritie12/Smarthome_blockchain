@@ -52,6 +52,8 @@ class Bloc:
         encoded= string.encode()
         id_hash = hashlib.sha256(encoded).hexdigest()
 
+        print(id_hash)
+
         return (id_hash,proof)
 
 class Transaction:
@@ -81,6 +83,15 @@ class Chain:
             self.add_transaction(src, dest, time,type_tr, val)
         else:
             b.data.append(Transaction(src, dest, time,type_tr, val))
+
+    def add_tr(self,tr):
+        b = self.blocs[self.currentIndex]
+        if len(b.data)>=10:
+            self.closeBlock()
+            self.add_tr(tr)
+        else:
+            b.data.append(tr)
+
     
     def add_bloc(self, prev_hash):
         self.blocs.append(Bloc(prev_hash))
