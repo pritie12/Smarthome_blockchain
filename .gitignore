@@ -1,3 +1,7 @@
 
+
 *.o
 main
+
+__pycache__/blockchain.cpython-38.pyc
+

@@ -1,6 +1,5 @@
 import datetime
 import hashlib
-from logging.config import valid_ident
 import enum
 
 
@@ -22,6 +21,11 @@ def initTypeTR (str):
             return 
 
 
+class Type_node(enum.Enum):
+    lumSensor =4
+    motionSensor =3
+    user=1
+    light=2
 
 
 class Bloc:
@@ -29,13 +33,13 @@ class Bloc:
     def __init__(self, prevHash) :
         print("new bloc create")
         self.prevHash= prevHash
-        self.proofOfWork =0
+        self.proofOfWork =-1
         self.id_hash ="0"
         self.time=datetime.datetime.now().timestamp()
         self.data =[]
         #self.nextBloc
     
-    def idValid(self):
+    def isValid(self):
         return True
 
     def dataToString(self):
@@ -48,12 +52,14 @@ class Bloc:
         proof= self.proofOfWork
         blocString =str(self.time)+"-"+ self.dataToString()
 
-        string = blocString +"-" +str(proof)
-        encoded= string.encode()
-        id_hash = hashlib.sha256(encoded).hexdigest()
+        id_hash="x"
 
-        print(id_hash)
-
+        while id_hash[0]!= "0":
+            proof+=1
+            string = blocString +"-" +str(proof)
+            encoded= string.encode()
+            id_hash = hashlib.sha256(encoded).hexdigest()
+        print("id hash :"+id_hash)
         return (id_hash,proof)
 
 class Transaction:
