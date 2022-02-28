@@ -1,12 +1,13 @@
+#light.py
 import sys
 from Node import *
 from blockchain import Transaction, Type_tr
 import datetime
 
 
-class UserN(Node):
+class MotorN(Node):
     def __init__(self,param):
-        return super().__init__("user",param)
+        return super().__init__("motor",param) # param in sec
 
     def mainCommands(self):
         print("Commandes possibles : ")
@@ -28,19 +29,18 @@ class UserN(Node):
             print("retry later")
     
     def trResponse(self,type,tr):
-        if tr.dest_id==self.id:
-            if tr.tr_type ==Type_tr.SET and tr.sender_id== self.id: #condition
+        if tr.dest==self.id:
+            '''if tr._type ==Type_tr.SET:
                 self.val=tr.val
-                self.sendTransaction(Transaction(self.id,tr.sender,datetime.datetime.now().timestamp(),Type_tr.SEND,self.val))
-                # envoie un send val
-            if tr.tr_type ==Type_tr.GET:
-                #envoie un send val
+                # envoie un send val'''
+            if tr._type ==Type_tr.GET:
+                #envoie un send vql
                 self.sendTransaction(Transaction(self.id,tr.sender,datetime.datetime.now().timestamp(),Type_tr.SEND,self.val))
 
             
-            if tr.tr_type ==Type_tr.SEND:
+            if tr._type ==Type_tr.SEND:
                 print("node "+ tr.sender+": "+ tr.val)
-                
+                #type SEND ???
 
 
 
@@ -58,14 +58,14 @@ except :
 
 
 
-client=UserN(0)
+client=MotorN(60*5)
 
 chain = client.bloc
 
 client.connecServer(host,port)
 
 while True:
-    client.mainCommands()
+    #client.mainCommands()
     (typeMsg,arg) = client.receiveMsg()
     if typeMsg=="tr":
         client.bloc.add_tr(arg)

@@ -5,3 +5,5 @@ main
 
 __pycache__/blockchain.cpython-38.pyc
 
+__pycache__/blockchain.cpython-38.pyc
+*.pyc
