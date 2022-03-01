@@ -1,3 +1,4 @@
+from curses.ascii import NUL
 from blockchain import Chain, Transaction , initTypeTR
 import socket
 
@@ -17,16 +18,20 @@ class Node:
     
     def connecServer(self,host, port):
         self.client = socket.socket()
+        self.client.settimeout(1)
         try:
             self.client.connect((host, port))
             self.receiveMsg() # to init the id
             self.client.send(str.encode("cl:"+str(self.id)+","+self.type_n))
         except socket.error as e:
-            print(str(e))
+            #print("no msg")
+            i=0
+        print ("client "+ str(self.id) + " " + self.type_n + " connectee")
 
     def sendTransaction(self,tr):
         msg ="tr:"+tr.toString()  # transaction
-        print (msg)
+        print ("tr envoye: " +msg)
+       # self.bloc.add_tr(tr)
         self.client.send(str.encode(msg))
     
     def sendBlockValidation(self, res): 
@@ -44,20 +49,27 @@ class Node:
 
     
     def receiveMsg(self):
-        msg =(self.client.recv(socketSize)).decode('utf-8')
-        print(msg)
-        msgSplited = msg.split(":")
-        typeMsg = msgSplited[0]
-        if typeMsg=="tr":
-            trSting =msgSplited[1].split(",")
-            tr =Transaction (trSting[0],trSting[1],trSting[2],initTypeTR(trSting[3]),trSting[4])
-            return (typeMsg,tr)
-        elif typeMsg=="id":
-            self.id=int(msgSplited[1])
-        elif typeMsg=="cl":
-            self.nodes.append((int(msgSplited[1]),msgSplited[2])) # pb doublons
-        else:
-            return (msgSplited[0], msgSplited[1])
+        try:
+            msg =self.client.recv(socketSize).decode('utf-8')
+            
+            msgSplited = msg.split(":")
+            typeMsg = msgSplited[0]
+            
+            if typeMsg=="tr":
+                print("recu: "+ msg)
+                trSting =msgSplited[1].split(",")
+                tr =Transaction (trSting[0],trSting[1],trSting[2],initTypeTR(trSting[3]),trSting[4])
+                return (typeMsg,tr)
+            elif typeMsg=="id":
+                self.id=int(msgSplited[1])
+            elif typeMsg=="cl":
+                self.nodes.append((int(msgSplited[1]),msgSplited[2])) # pb doublons
+            else:
+                return (msgSplited[0], msgSplited[1])
+        except socket.error as e:
+           # print("no msg")
+            i=0
+            
 
         
 

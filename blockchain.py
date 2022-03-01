@@ -3,7 +3,7 @@ import hashlib
 import enum
 
 
-
+size_bloc = 50
 
 class Type_tr(enum.Enum):
     GET=1
@@ -40,7 +40,31 @@ class Bloc:
         #self.nextBloc
     
     def isValid(self):
-        return True
+
+        #detection du seuil de luminosité lorsque la lumiere est allumee 
+        t=datetime.datetime.now().timestamp()
+        for i in range(0,len(self.data)-1):
+            tr=self.data[i]
+            switchOff = True
+            if tr.dest_id==2 and tr.tr_type==Type_tr.SET and tr.val==1 :
+                start=tr.time # debut de l'interval ou la lumiere est allumee
+                switchOff=False
+            if tr.dest_id==2 and tr.tr_type==Type_tr.SET and tr.val==0:
+                last=datetime.datetime.now().timestamp()
+                switchOff=True
+            if (not switchOff and tr.sender_id==4 and tr.tr_type==Type_tr.SEND and tr.val>=0.7):
+                return True
+            else :
+                return False
+        
+        return True 
+
+            
+            
+            
+
+        #detection de passage
+        
 
     def dataToString(self):
         str=""
@@ -52,14 +76,16 @@ class Bloc:
         proof= self.proofOfWork
         blocString =str(self.time)+"-"+ self.dataToString()
 
-        id_hash="x"
-
-        while id_hash[0]!= "0":
+        id_hash="xx"
+        t1=datetime.datetime.now().timestamp()
+        while id_hash[0]!= "0"  :
             proof+=1
             string = blocString +"-" +str(proof)
             encoded= string.encode()
             id_hash = hashlib.sha256(encoded).hexdigest()
-        print("id hash :"+id_hash)
+        #print("id hash :"+id_hash)
+        t2=datetime.datetime.now().timestamp()
+        print( "mine time ="+str(t2-t1) )
         return (id_hash,proof)
 
 class Transaction:
@@ -84,7 +110,7 @@ class Chain:
     
     def add_transaction(self,src, dest, time,type_tr, val):
         b = self.blocs[self.currentIndex]
-        if len(b.data)>=10:
+        if len(b.data)>=size_bloc:
             self.closeBlock()
             self.add_transaction(src, dest, time,type_tr, val)
         else:
@@ -92,7 +118,7 @@ class Chain:
 
     def add_tr(self,tr):
         b = self.blocs[self.currentIndex]
-        if len(b.data)>=10:
+        if len(b.data)>=size_bloc:
             self.closeBlock()
             self.add_tr(tr)
         else:
@@ -109,7 +135,7 @@ class Chain:
         #checkProof
         currB.id_hash=id_hash
         currB.proofOfWork=proof
-        print("Block close:"+ id_hash )
+        #print("Block close:"+ id_hash )
         self.add_bloc(id_hash)
         
         self.currentIndex+=1

@@ -6,6 +6,8 @@ host = '127.0.0.1'
 port = 2004
 Nb_client = 0
 current_tr=""
+clients =[]
+
 try:
     ServerSideSocket.bind((host, port))
 except socket.error as e:
@@ -30,7 +32,7 @@ def multi_threaded_client(connection):
     connection.close()
 
 i=0
-clients =[]
+
 while True:
     Client, address = ServerSideSocket.accept()
     clients.append(Client)

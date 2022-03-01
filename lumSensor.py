@@ -6,7 +6,7 @@ from PyQt5.QtGui import QFont
 
 import sys
 from Node import *
-from blockchain import Transaction, Type_tr
+from blockchain import Transaction, Type_tr,Type_node
 import datetime
 
 
@@ -39,29 +39,22 @@ class slider(QWidget):
 
 
 
-class UserN(Node):
+class lumSensorN(Node):
     def __init__(self):
         super().__init__("sensor",0.5)
         self.app = QApplication(sys.argv)
         self.slider = slider()
         self.slider.show()
 
+    def checkUserparam():
+        return True
     
 
 
     def mainCommands(self):
         self.val= self.get_sensor_val()
-        if(Input=="1"):
-            Input=input("Entrez l'id de l'objet")
-            dest= int(Input)
-            Input=input("Entrez la valeur")
-            val = int(Input)
-            self.sendTransaction(Transaction(self.id,dest,datetime.datetime.now().timestamp(),Type_tr.SET,val))
-        elif (Input=="2"):
-            Input=input("Entrez l'id de l'objet")
-            dest= int(Input)
-            self.sendTransaction(Transaction(self.id,dest,datetime.datetime.now().timestamp()),Type_tr.GET,self.val)
-        
+        if self.val< self.param and self.checkUserparam():
+            self.sendTransaction(Transaction(self.id,Type_node.light.value,datetime.datetime.now().timestamp(),Type_tr.SET,1))
         else:
             print("retry later")
     
@@ -89,7 +82,7 @@ class UserN(Node):
 
 try :
     host=sys.argv[1]
-    port = sys.argv[2]
+    port = int(sys.argv[2])
     
     print(port, host)
 except :
@@ -99,7 +92,7 @@ except :
 
 
 
-client=UserN(0)
+client=lumSensorN()
 
 chain = client.bloc
 
@@ -107,10 +100,13 @@ client.connecServer(host,port)
 
 while True:
     client.mainCommands()
-    (typeMsg,arg) = client.receiveMsg()
-    if typeMsg=="tr":
-        client.bloc.add_tr(arg)
-        client.trResponse(typeMsg,arg)
+    try:
+        (typeMsg,arg) = client.receiveMsg()
+        if typeMsg=="tr":
+            client.bloc.add_tr(arg)
+            client.trResponse(typeMsg,arg)
+    except:
+        i=0
     sys.exit(client.app.exec_())
 
 

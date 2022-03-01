@@ -14,15 +14,21 @@ class UserN(Node):
         print("2-Get value")
         Input=input("Que voulez-vous faire?")
         if(Input=="1"):
-            Input=input("Entrez l'id de l'objet")
+            Input=input("Entrez l'id de l'objet: ")
             dest= int(Input)
-            Input=input("Entrez la valeur")
+            Input=input("Entrez la valeur: ")
             val = int(Input)
-            self.sendTransaction(Transaction(self.id,dest,datetime.datetime.now().timestamp(),Type_tr.SET,val))
+            tr=Transaction(self.id,dest,datetime.datetime.now().timestamp(),Type_tr.SET,val)
+            self.sendTransaction(tr)
+           # self.bloc.add_tr(tr)
         elif (Input=="2"):
-            Input=input("Entrez l'id de l'objet")
+            Input=input("Entrez l'id de l'objet: ")
             dest= int(Input)
-            self.sendTransaction(Transaction(self.id,dest,datetime.datetime.now().timestamp()),Type_tr.GET,self.val)
+            tr=Transaction(self.id,dest,datetime.datetime.now().timestamp(),Type_tr.GET,self.val)
+            self.sendTransaction(tr)
+            #self.bloc.add_tr(tr)
+        elif (Input=="3"):
+            print(self.bloc.blocs[0].dataToString())
         
         else:
             print("retry later")
@@ -48,7 +54,7 @@ class UserN(Node):
 
 try :
     host=sys.argv[1]
-    port = sys.argv[2]
+    port = int(sys.argv[2])
     
     print(port, host)
 except :
@@ -66,10 +72,14 @@ client.connecServer(host,port)
 
 while True:
     client.mainCommands()
-    (typeMsg,arg) = client.receiveMsg()
-    if typeMsg=="tr":
-        client.bloc.add_tr(arg)
-        client.trResponse(typeMsg,arg)
+    try:
+        (typeMsg,arg) = client.receiveMsg()
+        if typeMsg=="tr":
+            client.bloc.add_tr(arg)
+            client.trResponse(typeMsg,arg)
+    except:
+        i=0
+
 
 
 
